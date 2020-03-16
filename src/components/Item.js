@@ -12,29 +12,24 @@ const useStyles = makeStyles({
   },
 })
 
-const KEYS = {
-  time: 'time',
-  title: 'title',
-  by: 'by',
-  score: 'score',
-  text: 'text',
-  kids: 'kids',
+const keys = {
+  TIME: 'time',
+  TITLE: 'title',
+  BY: 'by',
+  SCORE: 'score',
+  TEXT: 'text',
+  KIDS: 'kids',
+  URL: 'url',
+  TIME_BY_SCORE: 'time_by_score'
 }
 
 const COMPONENTS = [
-  // {
-  //   key: 'time',
-  //   showWhenMinimized: true,
-  //   Component: ({value, ...props}) => (
-  //     <Typography {...props} variant={'caption'}>{moment.unix(value).calendar()}</Typography>
-  //   )
-  // },
   {
-    key: 'time_by_score',
+    key: keys.TIME_BY_SCORE,
     showWhenMinimized: true,
     Component: ({value: {time, by, score}, classes, ...props}) => {
-      let text = `${moment.unix(time).fromNow()} - ${by}`
-      if (score) text += `- ${score} points`
+      let text = `${moment.unix(time).fromNow()} ∙ ${by}`
+      if (score) text += ` ∙ ${score} points`
       return (
         <Typography {...props} variant={'caption'} className={classes.time}>
           {text}
@@ -43,7 +38,7 @@ const COMPONENTS = [
     }
   },
   {
-    key: 'title',
+    key: keys.TITLE,
     showWhenMinimized: true,
     Component: ({value, classes, ...props}) => (
       <Typography {...props} variant="h2">{value}</Typography>
@@ -53,28 +48,19 @@ const COMPONENTS = [
     )
   },
   {
-    key: 'url',
+    key: keys.URL,
     Component: ({value, classes, ...props}) => (
       <Typography {...props} variant="h2">{value}</Typography>
     ),
   },
-  // {
-  //   key: 'by',
-  //   Component: ({value, ...props}) => (
-  //     <Typography {...props}>By: {value}</Typography>
-  //   )
-  // },
-  // {
-  //   key: 'score',
-  //   Component: ({value, ...props}) => (
-  //     <Typography {...props}>Score: {value}</Typography>
-  //   )
-  // },
   {
-    key: 'text',
+    key: keys.TEXT,
     showWhenMinimized: true,
     Component: ({value, classes, ...props}) => (
-      <Typography {...props}>Text: {value}</Typography>
+      <Typography {...props}>
+        {/*assuming that the source is trusted and using dangerouslySetInnerHTML*/}
+        <span dangerouslySetInnerHTML={{__html:value}} />
+      </Typography>
     ),
     MinimizedComponent: ({value, classes, ...props}) => (
       <Typography
@@ -88,12 +74,13 @@ const COMPONENTS = [
           textOverflow: 'ellipsis'
         }}
       >
-        {value}
+        {/*assuming that the source is trusted and using dangerouslySetInnerHTML*/}
+        <span dangerouslySetInnerHTML={{__html:value}} />
       </Typography>
     )
   },
   {
-    key: 'kids',
+    key: keys.KIDS,
     Component: ({value, classes, ...props}) => (
       <URLDataRenderer {...props} data={value} title={'Comments'} quickView/>
     )
@@ -105,10 +92,10 @@ export default function Item ({className, data, minimized}) {
 
   const parsedData = {...(data || {})}
   data && (
-    parsedData.time_by_score = {
-      time: parsedData[KEYS.time],
-      by: parsedData[KEYS.by],
-      score: parsedData[KEYS.score]
+    parsedData[keys.TIME_BY_SCORE] = {
+      time: parsedData[keys.TIME],
+      by: parsedData[keys.BY],
+      score: parsedData[keys.SCORE]
     }
   )
 

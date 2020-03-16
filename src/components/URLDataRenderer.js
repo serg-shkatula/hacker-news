@@ -14,6 +14,9 @@ const useStyles = makeStyles({
   },
   item: {
     marginBottom: unit,
+  },
+  title: {
+    marginBottom: unit,
   }
 })
 
@@ -38,7 +41,7 @@ function URLDataRenderer ({url, title, data: propsData, quickView, asLink}) {
 
   return (
     <div>
-      <Typography variant={'h2'}>{title}</Typography>
+      <Typography variant={'h2'} className={classes.title}>{title}</Typography>
       <ContentWrapper className={classes.content}>
         {!data ? (
           <Typography>Fetching...</Typography>
