@@ -10,14 +10,17 @@ const useStyles = makeStyles({
 
 export default function MasterPage ({routeProps}) {
   const classes = useStyles()
-  const {match: {params = []} = {}} = routeProps
-  const dataUrl = (params[0] || '') === '' ? 'topstories' : params[0]
+  const {match: {params = {}} = {}} = routeProps
+  let url = params[0]
+  const showTopStories = (url || '') === ''
+  showTopStories && (url = 'topstories')
+
   return (
     <div>
       <Link to="/">
         <Typography variant={'h1'}>Hacker News</Typography>
       </Link>
-      <URLDataRenderer url={dataUrl} title={'Top Stories'}/>
+      <URLDataRenderer url={url} title={'Top Stories'} quickView={showTopStories}/>
     </div>
   )
 }

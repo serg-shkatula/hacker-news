@@ -3,12 +3,16 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import Item from './Item'
 import { fetchData } from '../api'
+import { unit } from '../styles'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles({
-  root: {},
+  content: {
+    paddingLeft: unit
+  },
 })
 
-function URLDataRenderer ({url, title}) {
+function URLDataRenderer ({url, title, quickView, asLink}) {
   const classes = useStyles()
   const [data, setData] = useState(undefined)
   useEffect(() => {
@@ -17,20 +21,25 @@ function URLDataRenderer ({url, title}) {
       setData(fetchedData)
     })()
   }, [url])
+
+  const ContentWrapper = asLink ? (({children}) => <Link to={'/' + url}>{children}</Link>) : 'div'
+
   return (
     <div>
       <Typography variant={'h2'}>{title}</Typography>
-      {!data ? (
-        <Typography>Fetching...</Typography>
-      ) : (
-        Array.isArray(data) ? (
-          data.map((item) => (
-            <URLDataRenderer key={item} url={'item/' + item}/>
-          ))
+      <ContentWrapper className={classes.content}>
+        {!data ? (
+          <Typography>Fetching...</Typography>
         ) : (
-          <Item data={data}/>
-        )
-      )}
+          Array.isArray(data) ? (
+            data.map((item) => (
+              <URLDataRenderer key={item} url={'item/' + item} asLink={quickView}/>
+            ))
+          ) : (
+            <Item data={data}/>
+          )
+        )}
+      </ContentWrapper>
     </div>
   )
 }
