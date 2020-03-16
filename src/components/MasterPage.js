@@ -2,10 +2,14 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import URLDataRenderer from './URLDataRenderer'
-import { Link } from 'react-router-dom'
+import UnstyledLink from './UnstyledLink'
+import { unit } from '../styles'
 
 const useStyles = makeStyles({
-  root: {},
+  root: {
+    padding: unit * 2,
+    boxSizing: 'border-box'
+  },
 })
 
 export default function MasterPage ({routeProps}) {
@@ -16,11 +20,11 @@ export default function MasterPage ({routeProps}) {
   showTopStories && (url = 'topstories')
 
   return (
-    <div>
-      <Link to="/">
+    <div className={classes.root}>
+      <UnstyledLink to="/">
         <Typography variant={'h1'}>Hacker News</Typography>
-      </Link>
-      <URLDataRenderer url={url} title={'Top Stories'} quickView={showTopStories}/>
+      </UnstyledLink>
+      <URLDataRenderer url={url} title={showTopStories && 'Top Stories'} quickView={showTopStories}/>
     </div>
   )
 }
