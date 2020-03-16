@@ -1,11 +1,15 @@
-import React from 'react';
+import React from 'react'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import MasterPage from './components/MasterPage'
 
-function App() {
+function App () {
   return (
-    <div>
-      Hacker news
-    </div>
-  );
+    <BrowserRouter>
+      <Switch>
+        <Route path="/*">{(props) => <MasterPage routeProps={props}/>}</Route>
+      </Switch>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
