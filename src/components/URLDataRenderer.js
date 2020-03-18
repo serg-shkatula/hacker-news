@@ -3,10 +3,13 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import Item from './Item'
 import { fetchData } from '../api'
-import { unit } from '../styles'
+import { colors, unit } from '../styles'
 import UnstyledLink from './UnstyledLink'
 
 const useStyles = makeStyles({
+  root: {
+    maxWidth: 800,
+  },
   content: {
     paddingRight: unit,
     paddingLeft: unit,
@@ -17,6 +20,13 @@ const useStyles = makeStyles({
   },
   title: {
     marginBottom: unit,
+  },
+  link: {
+    display: 'block',
+    '&:hover': {
+      // opacity: 0.5,
+      color: colors.highlight,
+    }
   }
 })
 
@@ -37,11 +47,13 @@ function URLDataRenderer ({url, title, data: propsData, quickView, asLink}) {
     setData(propsData)
   }, [propsData])
 
-  const ContentWrapper = asLink ? (({children}) => <UnstyledLink to={'/' + url}>{children}</UnstyledLink>) : 'div'
+  const ContentWrapper = asLink
+    ? (({children}) => <UnstyledLink className={classes.link} to={'/' + url}>{children}</UnstyledLink>)
+    : 'div'
 
   return (
-    <div>
-      <Typography variant={'h2'} className={classes.title}>{title}</Typography>
+    <div className={classes.root}>
+      {title && <Typography variant={'h2'} className={classes.title}>{title}</Typography>}
       <ContentWrapper className={classes.content}>
         {!data ? (
           <Typography>Fetching...</Typography>

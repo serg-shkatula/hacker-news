@@ -1,30 +1,96 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
+import classNames from 'classnames'
+import { createMuiTheme, Typography, withWidth } from '@material-ui/core'
 import URLDataRenderer from './URLDataRenderer'
 import UnstyledLink from './UnstyledLink'
-import { unit } from '../styles'
+import { colors, unit } from '../styles'
+import Header from './Header'
 
 const useStyles = makeStyles({
   root: {
+    boxSizing: 'border-box',
+    display: 'flex',
+    overflow: 'hidden',
+  },
+  pageHeigh:{
+    height: '100vh',
+  },
+  content: {
+    height: '100%',
+    overflow: 'scroll',
+    width: '70%',
     padding: unit * 2,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+  },
+  header: {
+    width: '30%',
+    color: colors.grey,
+    padding: unit * 2,
+    boxSizing: 'border-box',
+  },
+  font32: {
+    fontSize: 32,
+  },
+  font42: {
+    fontSize: 42,
+  },
+  font50: {
+    fontSize: 58,
+  },
+  fullWidth: {
+    width: '100%',
+  }
+})
+
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: '"Playfair Display", "Roboto", "Helvetica", "Arial", sans-serif',
+    body1: {
+      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
+    }
   },
 })
 
-export default function MasterPage ({routeProps}) {
+function MasterPage ({width, routeProps}) {
   const classes = useStyles()
   const {match: {params = {}} = {}} = routeProps
   let url = params[0]
   const showTopStories = (url || '') === ''
   showTopStories && (url = 'topstories')
 
+  const isExtraSmall = width === 'xs'
+  const isSmall = width === 'sm'
+  const isMedium = width === 'md'
+
   return (
-    <div className={classes.root}>
-      <UnstyledLink to="/">
-        <Typography variant={'h1'}>Hacker News</Typography>
-      </UnstyledLink>
-      <URLDataRenderer url={url} title={showTopStories && 'Top Stories'} quickView={showTopStories}/>
+    <div
+      className={classNames([classes.root, !isExtraSmall && classes.pageHeigh])}
+      style={(isSmall || isExtraSmall) ? {flexDirection: 'column'} : undefined}
+    >
+      <ThemeProvider theme={theme}>
+        <Header
+          className={classNames([
+            classes.header,
+            (isSmall || isExtraSmall) && classes.fullWidth,
+          ])}
+          textClassName={classNames([
+            isMedium && classes.font50,
+            isSmall && classes.font42,
+            isExtraSmall && classes.font32,
+          ])}
+        />
+        <div
+          className={classNames([
+            classes.content,
+            (isSmall || isExtraSmall) && classes.fullWidth,
+          ])}
+        >
+          <URLDataRenderer url={url} title={showTopStories && 'Top Stories'} quickView={showTopStories}/>
+        </div>
+      </ThemeProvider>
     </div>
   )
 }
+
+export default withWidth()(MasterPage)

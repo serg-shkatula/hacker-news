@@ -4,6 +4,7 @@ import { Typography } from '@material-ui/core'
 import moment from 'moment'
 import URLDataRenderer from './URLDataRenderer'
 import { colors } from '../styles'
+import UnstyledLink from './UnstyledLink'
 
 const useStyles = makeStyles({
   root: {},
@@ -41,16 +42,22 @@ const COMPONENTS = [
     key: keys.TITLE,
     showWhenMinimized: true,
     Component: ({value, classes, ...props}) => (
-      <Typography {...props} variant="h2">{value}</Typography>
+      <Typography {...props} variant="h2" style={{overflowWrap: 'break-word'}}>
+        {value}
+      </Typography>
     ),
     MinimizedComponent: ({value, classes, ...props}) => (
-      <Typography {...props} variant="h5">{value}</Typography>
+      <Typography {...props} variant="h5">
+        {value}
+      </Typography>
     )
   },
   {
     key: keys.URL,
     Component: ({value, classes, ...props}) => (
-      <Typography {...props} variant="h2">{value}</Typography>
+      <Typography {...props}>
+        <UnstyledLink component={'a'} href={value} target={'blank'}>source →</UnstyledLink>
+      </Typography>
     ),
   },
   {
@@ -59,7 +66,7 @@ const COMPONENTS = [
     Component: ({value, classes, ...props}) => (
       <Typography {...props}>
         {/*assuming that the source is trusted and using dangerouslySetInnerHTML*/}
-        <span dangerouslySetInnerHTML={{__html:value}} />
+        <span dangerouslySetInnerHTML={{__html: value}}/>
       </Typography>
     ),
     MinimizedComponent: ({value, classes, ...props}) => (
@@ -75,7 +82,7 @@ const COMPONENTS = [
         }}
       >
         {/*assuming that the source is trusted and using dangerouslySetInnerHTML*/}
-        <span dangerouslySetInnerHTML={{__html:value}} />
+        <span dangerouslySetInnerHTML={{__html: value}}/>
       </Typography>
     )
   },
