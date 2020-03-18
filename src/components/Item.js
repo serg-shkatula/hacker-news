@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Typography } from '@material-ui/core'
 import moment from 'moment'
 import URLDataRenderer from './URLDataRenderer'
-import { colors } from '../styles'
+import { colors, unit } from '../styles'
 import UnstyledLink from './UnstyledLink'
 
 const useStyles = makeStyles({
@@ -55,7 +55,7 @@ const COMPONENTS = [
   {
     key: keys.URL,
     Component: ({value, classes, ...props}) => (
-      <Typography {...props}>
+      <Typography {...props} style={{...props.style, marginTop: unit, marginBottom: unit}}>
         <UnstyledLink component={'a'} href={value} target={'blank'}>source →</UnstyledLink>
       </Typography>
     ),

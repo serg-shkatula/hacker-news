@@ -53,7 +53,7 @@ function URLDataRenderer ({url, title, data: propsData, quickView, asLink}) {
 
   return (
     <div className={classes.root}>
-      {title && <Typography variant={'h2'} className={classes.title}>{title}</Typography>}
+      {title && <Typography variant={'h4'} className={classes.title}>{title}</Typography>}
       <ContentWrapper className={classes.content}>
         {!data ? (
           <Typography>Fetching...</Typography>
