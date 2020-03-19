@@ -22,6 +22,7 @@ const useStyles = makeStyles({
     width: '70%',
     padding: unit * 2,
     paddingRight: unit * 4,
+    paddingBottom: unit * 4,
     boxSizing: 'border-box',
   },
   header: {

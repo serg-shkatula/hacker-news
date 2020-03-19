@@ -20,7 +20,10 @@ const keys = {
   BY: 'by',
   SCORE: 'score',
   TEXT: 'text',
+  KARMA: 'karma',
+  CREATED: 'created',
   KIDS: 'kids',
+  SUBMITTED: 'submitted',
   URL: 'url',
   TIME_BY_SCORE: 'time_by_score'
 }
@@ -29,6 +32,7 @@ const modesMap = {
   FULL: 'full',
   MINIMIZED: 'minimized',
   COMMENT: 'comment',
+  SUBMIT_PREVIEW: 'submit-preview',
   DEFAULT: 'default',
 }
 
@@ -37,11 +41,34 @@ const COMPONENTS = [
     key: keys.TIME_BY_SCORE,
     componentMap: {
       [modesMap.DEFAULT]: ({value: {time, by, score}, classes, ...props}) => {
-        let text = `${moment.unix(time).fromNow()} ∙ ${by}`
-        if (score) text += ` ∙ ${score} points`
+        let text = `${moment.unix(time).fromNow()}`
+        return (
+          <Typography {...props} variant={'caption'} className={classes.time}>
+            {text} ∙ {by}{score ? ` ∙ ${score} points` : ''}
+          </Typography>
+        )
+      },
+      [modesMap.SUBMIT_PREVIEW]: ({value: {time, by, score}, classes, ...props}) => {
+        let text = `${moment.unix(time).fromNow()}`
         return (
           <Typography {...props} variant={'caption'} className={classes.time}>
             {text}
+          </Typography>
+        )
+      },
+      [modesMap.COMMENT]: ({value: {time, by, score}, classes, ...props}) => {
+        let text = `${moment.unix(time).fromNow()}`
+        return (
+          <Typography {...props} variant={'caption'} className={classes.time}>
+            {text} ∙ <UnstyledLink href={`/user/${by}`}>{by}</UnstyledLink>{score ? ` ∙ ${score} points` : ''}
+          </Typography>
+        )
+      },
+      [modesMap.FULL]: ({value: {time, by, score}, classes, ...props}) => {
+        let text = `${moment.unix(time).fromNow()}`
+        return (
+          <Typography {...props} variant={'caption'} className={classes.time}>
+            {text} ∙ <UnstyledLink href={`/user/${by}`}>{by}</UnstyledLink>{score ? ` ∙ ${score} points` : ''}
           </Typography>
         )
       }
@@ -56,6 +83,11 @@ const COMPONENTS = [
         </Typography>
       ),
       [modesMap.MINIMIZED]: ({value, classes, ...props}) => (
+        <Typography {...props} variant="h5" style={{overflowWrap: 'break-word'}}>
+          {value}
+        </Typography>
+      ),
+      [modesMap.SUBMIT_PREVIEW]: ({value, classes, ...props}) => (
         <Typography {...props} variant="h5" style={{overflowWrap: 'break-word'}}>
           {value}
         </Typography>
@@ -86,11 +118,27 @@ const COMPONENTS = [
           {/*assuming that the source is trusted and using dangerouslySetInnerHTML*/}
           <span dangerouslySetInnerHTML={{__html: value}}/>
         </Typography>
+      ),
+      [modesMap.SUBMIT_PREVIEW]: ({value, classes, ...props}) => (
+        <Typography
+          {...props}
+          style={{
+            overflowWrap: 'break-word',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            maxHeight: 20,
+            maxLines: 1,
+            textOverflow: 'ellipsis'
+          }}
+        >
+          {/*assuming that the source is trusted and using dangerouslySetInnerHTML*/}
+          <span dangerouslySetInnerHTML={{__html: value}}/>
+        </Typography>
       )
     }
   },
   {
-    key: 'created',
+    key: keys.CREATED,
     componentMap: {
       [modesMap.FULL]: ({value, classes, ...props}) => (
         <Typography {...props}>
@@ -100,7 +148,7 @@ const COMPONENTS = [
     }
   },
   {
-    key: 'karma',
+    key: keys.KARMA,
     componentMap: {
       [modesMap.FULL]: ({value, classes, ...props}) => (
         <Typography {...props}>
@@ -118,6 +166,20 @@ const COMPONENTS = [
       [modesMap.COMMENT]: ({value, classes, ...props}) => (
         <URLDataRenderer {...props} data={value} mode={modes.COMMENT}/>
       )
+    },
+  },
+  {
+    key: keys.SUBMITTED,
+    componentMap: {
+      [modesMap.FULL]: ({value, classes, ...props}) => (
+        <URLDataRenderer
+          {...props}
+          data={(value || []).slice(0,20)}
+          title={'Submitted'}
+          mode={modes.SUBMIT_PREVIEW}
+          asLinks
+        />
+      ),
     },
   },
 ]
@@ -141,12 +203,12 @@ export default function Item ({className, data, mode}) {
   if (!title && !text) parsedData[keys.TITLE] = parsedData[keys.ID]
 
   return (
-    <div className={className}>
+    <div>
       {COMPONENTS.map(({key, componentMap = {}}) => {
         const Component = componentMap[mode] || componentMap.default
         if (!parsedData[key] || !Component) return undefined
         return (
-          <Component key={key} value={parsedData[key]} classes={classes}/>
+          <Component className={className} key={key} value={parsedData[key]} classes={classes}/>
         )
       })}
     </div>

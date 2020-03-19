@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Typography, withWidth } from '@material-ui/core'
-import Item, { modes } from './Item'
+import Item, {modes} from './Item'
 import { fetchData } from '../api'
 import { colors, unit } from '../styles'
 import UnstyledLink from './UnstyledLink'
@@ -49,7 +49,6 @@ function URLDataRenderer ({width, url, title, data: propsData, mode = 'full', as
 
   width = width || lastKnownWidth
   lastKnownWidth = width
-  console.log('URLDataRenderer.URLDataRenderer, ~ Line 48: width >', width)
 
   useEffect(() => {
     setData(undefined)
@@ -83,7 +82,7 @@ function URLDataRenderer ({width, url, title, data: propsData, mode = 'full', as
         ) : (
           <ContentWrapper
             className={
-                classes['content-' + width] || classes.content
+                classes['content-' + width] || (mode !== modes.FULL ? classes.content : undefined)
             }
           >
             <Item className={classes.item} mode={mode} data={data}/>
