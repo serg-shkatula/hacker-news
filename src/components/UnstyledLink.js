@@ -2,11 +2,12 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core'
 import classNames from 'classnames'
+import { colors } from '../styles'
 
 const styles = {
   root: {
     textDecoration: 'none',
-    color: 'inherit',
+    '&:hover': {color: colors.highlight},
   }
 }
 
