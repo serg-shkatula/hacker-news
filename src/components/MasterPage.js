@@ -1,11 +1,11 @@
 import React from 'react'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import classNames from 'classnames'
-import { createMuiTheme, Typography, withWidth } from '@material-ui/core'
+import { createMuiTheme, withWidth } from '@material-ui/core'
 import URLDataRenderer from './URLDataRenderer'
-import UnstyledLink from './UnstyledLink'
 import { colors, unit } from '../styles'
 import Header from './Header'
+import { modes } from './Item'
 
 const useStyles = makeStyles({
   root: {
@@ -21,6 +21,7 @@ const useStyles = makeStyles({
     overflow: 'scroll',
     width: '70%',
     padding: unit * 2,
+    paddingRight: unit * 4,
     boxSizing: 'border-box',
   },
   header: {
@@ -86,7 +87,19 @@ function MasterPage ({width, routeProps}) {
             (isSmall || isExtraSmall) && classes.fullWidth,
           ])}
         >
-          <URLDataRenderer url={url} title={showTopStories && 'Top Stories'} quickView={showTopStories}/>
+          {showTopStories ? (
+            <URLDataRenderer
+              url={url}
+              title={'Top Stories'}
+              asLinks
+              mode={modes.MINIMIZED}
+            />
+          ) : (
+            <URLDataRenderer
+              url={url}
+              mode={modes.FULL}
+            />
+          )}
         </div>
       </ThemeProvider>
     </div>
